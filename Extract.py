@@ -32,9 +32,9 @@ def ExtractHTMLTables(Filename):
         goodLines = []
         isInTable = False
 
-        # TODO: account for nested tables
+        # TODO: account for multiple / nested tables
         for line in F:
-            if line.startswith("<table>"):
+            if line.startswith("<table"):
                 isInTable = True
 
             if isInTable:

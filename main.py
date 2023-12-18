@@ -5,8 +5,19 @@ import pprint
 
 
 def main(filename):
+    extractedlines = Extract.ExtractHTMLTables(f"{filename}")
     #Extract.Printfile(f"./working_pages/StrippedTables/{filename}.Table")
-    #Extract.ExtractHTMLTables(f"{filename}")
+    print("\n\n")
+    print("#"*48)
+    print("######__EXTRACTED_HTML__#__STRIPPED TABLE__######")
+    print("#"*48)
+    print("\n\n")
+    print(extractedlines)
+    print("\n\n")
+    print("#"*36)
+    print("######__END_OF_STRIPPED_TABLE__######")
+    print("#"*36)
+    print("\n\n")
 
     filepath = Pathinfo.GetStrippedTablePath(filename)
     ParsedTable = Parsing.ConstructTable(filepath, tablename=filename)
@@ -31,4 +42,10 @@ def main(filename):
 
 if __name__ == "__main__":
     Pathinfo.PrintDirectoryInfo()
-    main("Growth Rates")
+    Pathinfo.CheckFolders()
+    if len(Pathinfo.local_files['source']) > 0:
+        print("found HTML files: ")
+        for fpath in Pathinfo.local_files['source']:
+            print(f"  {fpath.stem}{fpath.suffix}")
+            main(fpath.stem)
+        #main(Pathinfo.local_files['source'][0].stem)

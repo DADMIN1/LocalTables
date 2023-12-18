@@ -39,7 +39,37 @@ filetype_suffix = {
     'source': '.html',
     'stripped': '.Table',
     'JSONdump': '.jsondump',
+    'Testfiles': '.*',
 }
+
+
+# dict holding lists of pathlib.Path objects
+local_files = {
+    'source': [],
+    'stripped': [],
+    'JSONdump': [],
+    'Testfiles': [],
+}
+
+
+def CheckFolders():
+    if not workingdir.exists():
+        print("workdir does not exist; creating")
+        workingdir.mkdir()
+    inputdir = currentDir / "downloadedPages"
+    if not inputdir.exists():
+        print("inputdir does not exist; creating")
+        inputdir.mkdir()
+    for key, dirname in subdir_names.items():
+        subpath = workingdir / dirname
+        if not subpath.exists():
+            print(f"{subpath} does not exist; creating")
+            subpath.mkdir()
+            local_files[key] = []
+        else:  # find all the files of the matching suffix under that path
+            foundfiles = subpath.glob(f"*{filetype_suffix[key]}")
+            local_files[key] = sorted(foundfiles)
+            # glob is case sensitive, unfortunately, and it can't be changed?
 
 
 @dataclass

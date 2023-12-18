@@ -31,8 +31,8 @@ class Tagtype(Enum):
     data = 'td'     # cell
     #span = 'span'
     table = 'table'
-    def __init__(self, attributes=None, isClosing=False):
-        self.attributes = attributes
+    def __init__(self, extraAttr=None, isClosing=False):
+        self.extraAttr = extraAttr
         self.isClosing = isClosing
     # TODO: handle opening/closing logic in here
 
@@ -70,16 +70,21 @@ def ParseLine(line):
             isEndtag = True
             T = T.removeprefix('/')
 
+        spl = T.split(' ')
         # if the tag contains a space, only the first word defines the type (the rest are HTML attributes)
-        # TODO: parse/save the attributes within tags (ESPECIALLY ID!!!)
-        T = T.split(' ')[0]
+        T = spl[0]
         # we're doing this to make the strings appropriate for Tagtype-enum conversion
+        # TODO: parse/save the attributes within tags (ESPECIALLY ID!!!)
+        attrs = [spl[x] for x in range(1, len(spl))]
 
         if isKnownTag(T):
+            newtag = Tagtype(T)
+            newtag.extraAttr = attrs
             if isEndtag:
-                Result.endtags.append(Tagtype(T))
+                newtag.isClosing = True
+                Result.endtags.append(newtag)
             else:
-                Result.tags.append(Tagtype(T))
+                Result.tags.append(newtag)
 
     # whatever's left in the line should be the value
     Result.value = line
@@ -125,11 +130,18 @@ def ConstructTable(TableFile, *, tablename=None):
         tempHeader = []
         currentindex = 0
 
+        print(WorkingTable.header)
+        print(E.data_parsed)
         for D in E.data_parsed:  # D is of class ParsedLine
             match D.tags:
                 case [Tagtype.header]:  # these need to match up with whatever ParseLine is doing
                     tempHeader.append(D.value)
                 case [Tagtype.data]:
+                    if len(WorkingTable.header) == 0:   # workaround
+                        if len(tempHeader) > currentindex:
+                            E.datamap.update({tempHeader[currentindex]: D.value})
+                            currentindex += 1
+                        continue
                     E.datamap.update({WorkingTable.header[currentindex]: D.value})  # assuming that the header has already been written
                     currentindex += 1
             # we're ignoring the closing tags and also section/unknown tags
