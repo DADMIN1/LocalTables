@@ -25,11 +25,10 @@ class Entry:
         self.datamap = {}
 
 
-# when parsing the HTML, identify the line/section by these tags in the format: <th> </th>
 class Tagtype(Enum):
     header = 'th'
-    section = 'tr'
-    data = 'td'
+    section = 'tr'  # table-row
+    data = 'td'     # cell
     #span = 'span'
 
 
@@ -52,9 +51,8 @@ class ParsedLine:
 def ParseLine(line):
     Result = ParsedLine(line)
     # finds all substrings that occur between characters '<' and '>'
-    # returns an array of matching substrings, without the enclosing delimiters
     foundtags = re.findall(r"(?<=<).+?(?=>)", line)
-    Result.rawtags = foundtags
+    Result.rawtags = foundtags  # returns an array of matching substrings, without the enclosing delimiters
 
     for T in foundtags:
         isEndtag = False
@@ -65,16 +63,18 @@ def ParseLine(line):
             T = T.removeprefix('/')
 
         # if the tag contains a space, only the first word defines the type (the rest are HTML attributes)
+        # TODO: parse/save the attributes within tags (ESPECIALLY ID!!!)
         T = T.split(' ')[0]
         # we're doing this to make the strings appropriate for Tagtype-enum conversion
 
+        # TODO: stop doing this janky '_value2member_map_' thing
         if Tagtype._value2member_map_.__contains__(T):
             if isEndtag:
                 Result.endtags.append(Tagtype(T))
             else:
                 Result.tags.append(Tagtype(T))
 
-    # whatever's left in the line is the value
+    # whatever's left in the line should be the value
     Result.value = line
     return Result
 

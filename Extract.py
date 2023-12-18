@@ -23,7 +23,6 @@ def Printfile(P):
 
 
 # scan through the HTML file and throw out everything that isn't a table
-# https://docs.python.org/3/library/fileinput.html#fileinput.input
 def ExtractHTMLTables(Filename):
     Filename = ValidateFilename(Filename)
     NameWithPath = "./working_pages/HTML/" + Filename + ".html"
@@ -33,6 +32,7 @@ def ExtractHTMLTables(Filename):
         goodLines = []
         isInTable = False
 
+        # TODO: account for nested tables
         for line in F:
             if line.startswith("<table>"):
                 isInTable = True

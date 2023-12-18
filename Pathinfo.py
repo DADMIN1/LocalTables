@@ -1,9 +1,5 @@
 import pathlib
-#from hashlib import md5
-# import difflib
-# import filecmp
 from dataclasses import dataclass
-#import jsonpickle
 
 
 def PrintDirectoryInfo():
@@ -91,8 +87,6 @@ def ValidateFilename(N):
     newname = N.split("/").pop()  # removes the leading path; assuming the filename will always be last
     newname = newname.split(".")[0]  # removes the suffix; filename will always be first.
     # Important that we do this after stripping the path, since it could start with a relative path './' or '../'
-    # print("given filename: " + N)
-    # print("returning name: " + newname)
     return newname
 
 
@@ -103,7 +97,6 @@ def GetStrippedTablePath(name):
     new_filename = name + ".Table"
     new_filepath = subdir / new_filename
     return pathlib.Path(new_filepath)
-    #return workingdir + "/StrippedTables/" + name + ".Table"
 
 
 def new_JSON_table_path(name):
@@ -113,4 +106,3 @@ def new_JSON_table_path(name):
     new_filename = name + ".jsondump"
     new_filepath = subdir / new_filename
     return pathlib.Path(new_filepath)
-    #return workingdir + "/JSON_Tables/" + name + ".jsondump"
