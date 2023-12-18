@@ -30,6 +30,14 @@ class Tagtype(Enum):
     section = 'tr'  # table-row
     data = 'td'     # cell
     #span = 'span'
+    table = 'table'
+    def __init__(self, attributes=None, isClosing=False):
+        self.attributes = attributes
+        self.isClosing = isClosing
+    # TODO: handle opening/closing logic in here
+
+
+def isKnownTag(tagstr): return tagstr in {x.value for x in Tagtype}
 
 
 @dataclass
@@ -67,8 +75,7 @@ def ParseLine(line):
         T = T.split(' ')[0]
         # we're doing this to make the strings appropriate for Tagtype-enum conversion
 
-        # TODO: stop doing this janky '_value2member_map_' thing
-        if Tagtype._value2member_map_.__contains__(T):
+        if isKnownTag(T):
             if isEndtag:
                 Result.endtags.append(Tagtype(T))
             else:
