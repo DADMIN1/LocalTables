@@ -6,9 +6,10 @@ def PrintDirectoryInfo():
     print("""\nFiles you want to operate on are expected to be in subdirectories under:
 (LocalTables) ./working_pages/
     /HTML/           -> source HTML files (expected to have a '.html' suffix)
-    /TextFile/       -> source HTMLs downloaded as 'text_only' files (.txt or .textonly suffix)
     /StrippedTables/ -> The HTML gets stripped of everything 
                             that isn't marked as a <table> and dumped here as [filename.Table]
+    /JSON_Tables/    -> Dumps of the Table-objects created by this program
+    /Testfiles/      -> For development purposes. Doesn't really handle anything here.
 
 These directories get searched by associated functions.
 Pass only the filename, without the full path or filetype suffix\n""")

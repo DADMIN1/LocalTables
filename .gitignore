@@ -2,7 +2,6 @@ __pycache__
 .venv
 .idea
 .git
-downloadedPages
 working_pages
 imgui.ini
 
